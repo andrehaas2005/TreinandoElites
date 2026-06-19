@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitLife - Atividade Física e Nutrição</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-dumbbell"></i>
+                <span>FitLife</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home" class="active">Início</a></li>
+                <li><a href="#exercises">Exercícios</a></li>
+                <li><a href="#workout">Planilha de Treino</a></li>
+                <li><a href="#nutrition">Diário Alimentar</a></li>
+                <li><a href="#social">Comunidade</a></li>
+            </ul>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Transforme Sua Vida</h1>
+            <p>Atividade física e nutrição equilibrada para alcançar seus objetivos</p>
+            <button class="cta-button" onclick="document.getElementById('workout').scrollIntoView({behavior: 'smooth'})">
+                Começar Agora
+            </button>
+        </div>
+    </section>
+
+    <!-- Exercises Section -->
+    <section id="exercises" class="section exercises-section">
+        <div class="container">
+            <h2 class="section-title">Exercícios com Execução Correta</h2>
+            <div class="exercise-filters">
+                <button class="filter-btn active" data-filter="all">Todos</button>
+                <button class="filter-btn" data-filter="chest">Peito</button>
+                <button class="filter-btn" data-filter="back">Costas</button>
+                <button class="filter-btn" data-filter="legs">Pernas</button>
+                <button class="filter-btn" data-filter="shoulders">Ombros</button>
+                <button class="filter-btn" data-filter="arms">Braços</button>
+                <button class="filter-btn" data-filter="core">Abdômen</button>
+            </div>
+            <div class="exercise-grid" id="exerciseGrid">
+                <!-- Exercises will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Workout Plan Section -->
+    <section id="workout" class="section workout-section">
+        <div class="container">
+            <h2 class="section-title">Planilha de Treino</h2>
+            <div class="workout-controls">
+                <select id="workoutDaySelect" class="day-selector">
+                    <option value="monday">Segunda-feira</option>
+                    <option value="tuesday">Terça-feira</option>
+                    <option value="wednesday">Quarta-feira</option>
+                    <option value="thursday">Quinta-feira</option>
+                    <option value="friday">Sexta-feira</option>
+                    <option value="saturday">Sábado</option>
+                    <option value="sunday">Domingo</option>
+                </select>
+                <button class="btn-primary" onclick="addExerciseToWorkout()">
+                    <i class="fas fa-plus"></i> Adicionar Exercício
+                </button>
+                <button class="btn-secondary" onclick="saveWorkout()">
+                    <i class="fas fa-save"></i> Salvar Treino
+                </button>
+            </div>
+            <div class="workout-table-container">
+                <table class="workout-table">
+                    <thead>
+                        <tr>
+                            <th>Exercício</th>
+                            <th>Séries</th>
+                            <th>Repetições</th>
+                            <th>Carga (kg)</th>
+                            <th>Descanso (s)</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="workoutTableBody">
+                        <!-- Workout items will be loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="workout-summary">
+                <h3>Resumo do Treino</h3>
+                <div class="summary-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-list"></i>
+                        <span id="totalExercises">0</span>
+                        <small>Exercícios</small>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-layer-group"></i>
+                        <span id="totalSets">0</span>
+                        <small>Séries Totais</small>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-clock"></i>
+                        <span id="estimatedTime">0</span>
+                        <small>Tempo Estimado (min)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nutrition Section -->
+    <section id="nutrition" class="section nutrition-section">
+        <div class="container">
+            <h2 class="section-title">Diário Alimentar</h2>
+            <div class="nutrition-controls">
+                <input type="date" id="nutritionDate" class="date-input">
+                <div class="meal-tabs">
+                    <button class="meal-tab active" data-meal="breakfast">Café da Manhã</button>
+                    <button class="meal-tab" data-meal="lunch">Almoço</button>
+                    <button class="meal-tab" data-meal="snack">Lanche</button>
+                    <button class="meal-tab" data-meal="dinner">Jantar</button>
+                </div>
+            </div>
+            
+            <div class="food-search">
+                <input type="text" id="foodSearch" placeholder="Buscar alimento..." class="search-input">
+                <button class="btn-primary" onclick="addFoodItem()">
+                    <i class="fas fa-plus"></i> Adicionar
+                </button>
+            </div>
+
+            <div class="meals-container" id="mealsContainer">
+                <!-- Meals will be loaded dynamically -->
+            </div>
+
+            <div class="daily-summary">
+                <h3>Resumo Diário de Macronutrientes</h3>
+                <div class="macros-chart">
+                    <div class="macro-bar">
+                        <div class="macro-fill protein-fill" id="proteinFill" style="width: 0%"></div>
+                        <span class="macro-label">Proteínas</span>
+                        <span class="macro-value" id="proteinValue">0g</span>
+                    </div>
+                    <div class="macro-bar">
+                        <div class="macro-fill carb-fill" id="carbFill" style="width: 0%"></div>
+                        <span class="macro-label">Carboidratos</span>
+                        <span class="macro-value" id="carbValue">0g</span>
+                    </div>
+                    <div class="macro-bar">
+                        <div class="macro-fill fat-fill" id="fatFill" style="width: 0%"></div>
+                        <span class="macro-label">Gorduras</span>
+                        <span class="macro-value" id="fatValue">0g</span>
+                    </div>
+                </div>
+                <div class="totals-display">
+                    <div class="total-card">
+                        <span class="total-label">Calorias</span>
+                        <span class="total-value" id="totalCalories">0 kcal</span>
+                    </div>
+                    <div class="total-card">
+                        <span class="total-label">Proteínas</span>
+                        <span class="total-value" id="totalProtein">0g</span>
+                    </div>
+                    <div class="total-card">
+                        <span class="total-label">Carboidratos</span>
+                        <span class="total-value" id="totalCarbs">0g</span>
+                    </div>
+                    <div class="total-card">
+                        <span class="total-label">Gorduras</span>
+                        <span class="total-value" id="totalFat">0g</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Section -->
+    <section id="social" class="section social-section">
+        <div class="container">
+            <h2 class="section-title">Compartilhe sua Jornada</h2>
+            <div class="social-share">
+                <h3>Compartilhar Progresso</h3>
+                <div class="share-buttons">
+                    <button class="share-btn facebook" onclick="shareToSocial('facebook')">
+                        <i class="fab fa-facebook-f"></i>
+                        <span>Facebook</span>
+                    </button>
+                    <button class="share-btn instagram" onclick="shareToSocial('instagram')">
+                        <i class="fab fa-instagram"></i>
+                        <span>Instagram</span>
+                    </button>
+                    <button class="share-btn twitter" onclick="shareToSocial('twitter')">
+                        <i class="fab fa-twitter"></i>
+                        <span>Twitter</span>
+                    </button>
+                    <button class="share-btn whatsapp" onclick="shareToSocial('whatsapp')">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>WhatsApp</span>
+                    </button>
+                    <button class="share-btn copy" onclick="copyProgress()">
+                        <i class="fas fa-copy"></i>
+                        <span>Copiar Texto</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="community-posts">
+                <h3>Posts da Comunidade</h3>
+                <div class="posts-container" id="postsContainer">
+                    <!-- Posts will be loaded dynamically -->
+                </div>
+            </div>
+
+            <div class="create-post">
+                <h3>Criar Post</h3>
+                <textarea id="postContent" placeholder="Compartilhe seu progresso, dicas ou conquistas..."></textarea>
+                <div class="post-actions">
+                    <button class="btn-primary" onclick="createPost()">
+                        <i class="fas fa-paper-plane"></i> Publicar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>FitLife</h4>
+                    <p>Sua plataforma completa para atividade física e nutrição</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Links Rápidos</h4>
+                    <ul>
+                        <li><a href="#exercises">Exercícios</a></li>
+                        <li><a href="#workout">Planilha de Treino</a></li>
+                        <li><a href="#nutrition">Diário Alimentar</a></li>
+                        <li><a href="#social">Comunidade</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Redes Sociais</h4>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 FitLife. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Exercise Modal -->
+    <div class="modal" id="exerciseModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 id="modalExerciseTitle">Nome do Exercício</h2>
+            <div class="modal-body">
+                <div class="exercise-image">
+                    <img id="modalExerciseImage" src="" alt="Execução correta">
+                </div>
+                <div class="exercise-details">
+                    <h3>Instruções de Execução</h3>
+                    <ol id="modalExerciseInstructions">
+                        <!-- Instructions will be loaded dynamically -->
+                    </ol>
+                    <div class="exercise-muscles">
+                        <h4>Músculos Trabalhados:</h4>
+                        <span id="modalExerciseMuscles" class="muscle-tags"></span>
+                    </div>
+                    <div class="exercise-tips">
+                        <h4>Dicas Importantes:</h4>
+                        <ul id="modalExerciseTips">
+                            <!-- Tips will be loaded dynamically -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Food Modal -->
+    <div class="modal" id="foodModal">
+        <div class="modal-content modal-small">
+            <span class="close-modal" onclick="closeFoodModal()">&times;</span>
+            <h2>Adicionar Alimento</h2>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Nome do Alimento:</label>
+                    <input type="text" id="foodName" placeholder="Ex: Arroz branco">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Quantidade (g):</label>
+                        <input type="number" id="foodQuantity" placeholder="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Proteínas (g/100g):</label>
+                        <input type="number" id="foodProtein" placeholder="7" step="0.1">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Carboidratos (g/100g):</label>
+                        <input type="number" id="foodCarbs" placeholder="28" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Gorduras (g/100g):</label>
+                        <input type="number" id="foodFat" placeholder="0.5" step="0.1">
+                    </div>
+                </div>
+                <button class="btn-primary full-width" onclick="confirmAddFood()">
+                    <i class="fas fa-check"></i> Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
